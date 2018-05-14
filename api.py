@@ -14,7 +14,7 @@ from werkzeug.contrib.fixers import ProxyFix
 
 from magic import magic
 
-MAX_FILE_SIZE = 1024*1024*10
+MAX_FILE_SIZE = 1024 * 1024 * 10
 N_FIELDS = 7
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -24,6 +24,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'app.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['MAX_CONTENT_LENGTH'] = 2 * MAX_FILE_SIZE
 
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=1)
 
