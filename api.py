@@ -130,13 +130,12 @@ class FileMagic(Resource):
         f = args['file']
         try:
             df = pd.read_csv(f)
+            df.columns = ['id', 'Click time', 'Ad id', 'Advertiser id', 'Site id', 'User id', 'User IP']
         except:
             return {'message': """first line- column names
                             each line must contains 7 fields
                             id, "Click time", "Ad id", "Advertiser id", "Site id", "User id", "User IP"
                             separated by ','"""}, 201
-
-        df.columns = [x.replace(' ', '_') for x in df.columns]	
 
         return magic(df)
 
