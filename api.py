@@ -15,7 +15,7 @@ from werkzeug.contrib.fixers import ProxyFix
 
 from magic import magic
 
-MAX_FILE_SIZE = 1024 * 1024 * 200
+MAX_FILE_SIZE = 1024 * 1024 * 100
 N_FIELDS = 7
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -25,7 +25,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL') or \
         'sqlite:///' + os.path.join(basedir, 'app.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['MAX_CONTENT_LENGTH'] = 2 * MAX_FILE_SIZE
+app.config['MAX_CONTENT_LENGTH'] = MAX_FILE_SIZE
 
 app.wsgi_app = ProxyFix(app.wsgi_app, num_proxies=1)
 
@@ -128,7 +128,14 @@ class FileMagic(Resource):
 
         args = self.reqparse.parse_args()
         f = args['file']
-        df = pd.read_csv(f)
+        try:
+            df = pd.read_csv(f)
+        except:
+            return {'message': """first line- column names
+                            each line must contains 7 fields
+                            id, "Click time", "Ad id", "Advertiser id", "Site id", "User id", "User IP"
+                            separated by ','"""}, 201
+
         df.columns = [x.replace(' ', '_') for x in df.columns]	
 
         return magic(df)
