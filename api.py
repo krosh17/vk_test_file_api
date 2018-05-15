@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 
 import werkzeug
 
@@ -14,7 +15,7 @@ from werkzeug.contrib.fixers import ProxyFix
 
 from magic import magic
 
-MAX_FILE_SIZE = 1024 * 1024 * 10
+MAX_FILE_SIZE = 1024 * 1024 * 200
 N_FIELDS = 7
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -124,23 +125,13 @@ class FileMagic(Resource):
         super(FileMagic, self).__init__()
 
     def post(self):
-        array_for_magic = []
+
         args = self.reqparse.parse_args()
         f = args['file']
+        df = pd.read_csv(f)
+        df.columns = [x.replace(' ', '_') for x in df.columns]	
 
-        for line in f.readlines(MAX_FILE_SIZE):
-            l = line.decode('utf8').strip().split(',')
-            if len(l) == N_FIELDS:
-                array_for_magic.append(l)
-            else:
-                return {'message': """each line must contains 7 fields
-                id, "Click time", "Ad id", "Advertiser id", "Site id", "User id", "User IP"
-                separated by ','"""}, 201
-
-        if f.read():
-            return {'message': 'file_too_big, it can be maximum 10Mb'},  201
-        else:
-            return magic(array_for_magic)
+        return magic(df)
 
 
 api.add_resource(FileMagic, '/api/file_upload')

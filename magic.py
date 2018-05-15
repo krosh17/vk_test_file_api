@@ -5,10 +5,8 @@ from collections import Counter
 from scipy.stats import entropy
 
 
-def magic(X_list):
-    df = pd.DataFrame(X_list[1:], )
-    df.columns = [x.replace(' ', '_').replace('"', '') for x in X_list[0]]
-
+def magic(df):
+    
     df.Click_time = df.Click_time.astype(int)
     df.id = df.id.astype(int)
 
