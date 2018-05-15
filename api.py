@@ -18,6 +18,9 @@ from magic import magic
 MAX_FILE_SIZE = 1024 * 1024 * 100
 N_FIELDS = 7
 
+user_limits = [20, 5, 2]
+ip_limits = [40, 10, 5]
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
@@ -37,13 +40,17 @@ auth = HTTPBasicAuth()
 limiter_user = Limiter(
     app,
     key_func=lambda: auth.username(),
-    default_limits=["50 per day", "10 per hour", "5 per 5 minute"]
+    default_limits=['{} per day'.format(user_limits[0]),
+                    '{} per hour'.format(user_limits[1]),
+                    '{} per 5 minute'.format(user_limits[2])]
 )
 
 limiter_ip = Limiter(
     app,
     key_func=get_remote_address,
-    default_limits=["50 per day", "10 per hour", "5 per 5 minute"])
+    default_limits=['{} per day'.format(ip_limits[0]),
+                    '{} per hour'.format(ip_limits[1]),
+                    '{} per 5 minute'.format(ip_limits[2])])
 
 
 class User(db.Model):
