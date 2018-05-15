@@ -6,6 +6,9 @@ from scipy.stats import entropy
 
 
 def magic(df):
+    """
+    look bots and suspect sites by df of users clicks
+    """
     
     df.Click_time = df.Click_time.astype(int)
     df.id = df.id.astype(int)
