@@ -4,7 +4,7 @@
 ## Доступ к api только для зарегистрированных пользователей.
 Создать пользователя можно с помощью запроса
 
-curl -X POST -H "Content-Type: application/json" -d '{"username":"user","password":"passw"}' http://18.216.135.101/api/create_user
+curl -k -X POST -H "Content-Type: application/json" -d '{"username":"user","password":"passw"}' https://18.216.135.101/api/create_user
 
 При успешном создании вы получите сообщение\
 {'username': user}, 201
@@ -12,7 +12,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"username":"user","passwor
 
 Для запроса подозрительных объектов из файла нужно выполнить запрос:
 
-curl -u username:password -X POST http://18.216.135.101/api/file_upload -F 'file=@"file_pass"'
+curl -k -u username:password -X POST https://18.216.135.101/api/file_upload -F 'file=@"file_pass"'
 
 ## Ответ в формате:
 
